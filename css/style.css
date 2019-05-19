@@ -1,0 +1,62 @@
+* {
+    font-size: 1.1rem;
+}
+
+body {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border-top: 5px solid #E25303;
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+}
+
+/*
+p, a, span, time {
+    font-size: 1rem;
+}
+*/
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    font-size: 1.5rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+h1 { display: block; font-size: 2em; margin-top: 2em; margin-bottom: .75em; }
+h2 { display: block; font-size: 1.5em; margin-top: 2em; margin-bottom: .75em; }
+h3 { display: block; font-size: 1.17em; margin-top: 2em; margin-bottom: .75em; }
+h4 { display: block; font-size: 1em; margin-top: 2em; margin-bottom: .75em; }
+h5 { display: block; font-size: .83em; margin-top: 2em; margin-bottom: .75em; }
+h6 { display: block; font-size: .67em; margin-top: 2em; margin-bottom: .75em; }
+
+main {
+  max-width: 38rem;
+  padding: 2rem;
+  margin: auto;
+}
+
+code {
+    padding: 2rem;
+    overflow: auto;
+}
+
+code, code span {
+    font-size: .8rem !important;
+}
+
+a, a:link, a:visited, a:active, a:hover {
+    color: #E25303;
+    text-decoration: none;
+    /* border-bottom: 1px dashed #E25303; */
+}
+
+.post-meta,
+.post-meta * {
+    font-size: .9rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+.post-title {
+    margin-bottom: .5rem;
+}
