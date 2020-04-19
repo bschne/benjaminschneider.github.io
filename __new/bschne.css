@@ -1,0 +1,265 @@
+/* Old orange accent: rgb(226, 83, 3) */
+
+html, body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+
+  font-family: 'Inter', sans-serif;
+  color: rgb(0, 0, 0);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', sans-serif;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: .75em;
+}
+
+p {
+  margin-bottom: 1.5em;
+  line-height: 150%;
+}
+
+/* EXTERNAL LINKS */
+
+a[href^="http://"]:not([href*="benjaminschneider.ch"]):after,
+a[href^="https://"]:not([href*="benjaminschneider.ch"]):after{
+    content: " 🡕" 
+}
+
+
+/* LINKS */
+
+a, a:visited {
+  color: rgb(255, 77, 6);
+  text-decoration: none;
+}
+
+a:active, a:hover {
+  color: rgb(255, 77, 6);
+  text-decoration: underline;
+  text-decoration-color: rgb(255, 77, 6);
+}
+
+#wrapper {
+  float: left;
+  width: 100%;
+  min-height: 100%;
+  padding: 2em;
+  border-left: 0.5em solid rgb(255, 77, 6);
+}
+
+#sidebar {
+  font-size: 100%;
+  padding-right: 2em;
+  float: left;
+  min-width: 25%;
+  height: 100%;
+}
+
+#header {
+  padding-top: .5em;
+}
+
+#header > h1 {
+  padding-top: 0;
+  display: inline-block;
+}
+
+#burger {
+  float: right;
+  color: rgb(255, 77, 6);
+  margin-top: 2px;
+  display: none !important;
+}
+
+#fixed-elems {
+  width: 25em;
+  position: fixed;
+  float: left;
+}
+
+ul#nav {
+  list-style: none;
+  padding: 0;
+}
+
+ul#nav > li {
+  margin-bottom: 1em;
+}
+
+ul#nav > li > a,
+ul#nav > li > a:visited {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+ul#nav > li > a:active,
+ul#nav > li > a:hover
+{
+  color: rgb(0, 0, 0);
+  text-decoration: underline;
+  text-decoration-color: rgb(255, 77, 6);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+#content {
+  margin-right: 30%;
+  margin-left: 25%;
+  padding-top: .75em;
+  max-width: 680px;
+}
+
+#content-grid {
+  margin-right: 2em;
+  margin-left: 25%;
+  padding-top: .75em;
+  max-width: 1200px;
+}
+
+.grid-item {
+  max-width: 350px;
+  display: inline-block;
+  margin-right: 2em;
+  margin-bottom: 5em;
+}
+
+.grid-item > .separator {
+  color: rgb(255, 77, 6);
+}
+
+aside, .aside {
+  display: inline;
+  float: right;
+  position: relative;
+  width: 20vw;
+  margin-right: -22vw;
+}
+
+@media screen and (max-width:1500px) { 
+  #fixed-elems {
+    position: relative;
+    float: left;
+    width: auto;
+  }
+
+  #content {
+    float: left;
+    margin-right: 2em;
+    margin-left: 2em;
+    max-width: 50%;
+  }
+
+  #content-grid {
+    float: left;
+    margin-right: 0;
+    margin-left: 2em;
+    max-width: 70%;
+  }
+
+
+  aside, .aside {
+    display: inline;
+    float: right;
+    position: relative;
+    margin-right: -22vw;
+  }
+}
+
+@media screen and (max-width:1200px) { 
+  #content {
+    max-width: 50%;
+  }
+
+  #content-grid {
+    float: left;
+    max-width: 50%;
+    margin-left: 2em;
+    margin-right: 2em; 
+  }
+
+  aside, .aside {
+    margin: 0;
+    float: none;
+  }
+
+  
+  aside:before, .aside:before,
+  aside:after, .aside:after {
+    content: ' '; 
+    margin-top: 1em;
+    display: block;
+  }
+}
+
+@media screen and (max-width:800px) { 
+  #content {
+    max-width: 100%;
+    margin-left: 0em;
+    margin-right: 0em;
+    margin-top: 2em;
+  }
+
+  #content-grid {
+    margin-left: 0em;
+    margin-right: 0em;
+    margin-top: 2em; 
+    max-width: 100%;
+    width: 100%
+  }
+
+  .grid-item {
+    max-width: 100%;
+    margin-right: 0;
+  }
+
+  .grid-item > img {
+    width: 100%;
+  }
+
+  #sidebar {
+    padding-right: 0;
+    min-width: 100%;
+    display: none;
+  }
+
+  #burger {
+    display: inline-block !important;
+    cursor: pointer;
+  }
+
+  #fixed-elems {
+    width: 100%;
+  }
+
+  #header {
+    width: 100%;
+  }
+}
+
+.aside,
+.aside > strong,
+.aside > sup {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 80%;
+  color: rgb(255, 77, 6);
+}
+
+.aside > a, .aside > a:visited,
+.aside > a:active, .aside > a:hover {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+p > sup {
+  font-family: 'IBM Plex Mono', monospace;
+  color: rgb(255, 77, 6); 
+}
+
