@@ -33,7 +33,7 @@ p {
 
 a[href^="http://"]:not([href*="benjaminschneider.ch"]):after,
 a[href^="https://"]:not([href*="benjaminschneider.ch"]):after{
-    content: " 🡕" 
+    content: " \1F855" 
 }
 
 
