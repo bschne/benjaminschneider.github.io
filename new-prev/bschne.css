@@ -33,7 +33,7 @@ p {
 
 a[href^="http://"]:not([href*="benjaminschneider.ch"]):after,
 a[href^="https://"]:not([href*="benjaminschneider.ch"]):after{
-    content: " \1F855" 
+    content: " \1F855";
 }
 
 
@@ -251,6 +251,13 @@ aside, .aside {
   #header {
     width: 100%;
   }
+
+  /* HACK - character not correctly displayed on iOS... :-/ */
+  a[href^="http://"]:not([href*="benjaminschneider.ch"]):after,
+  a[href^="https://"]:not([href*="benjaminschneider.ch"]):after{
+      content: ""; 
+  }
+
 }
 
 .aside,
