@@ -232,6 +232,10 @@ aside, .aside {
     display: none;
   }
 
+  #header > h1 {
+    max-width: 75%;
+  }
+
   #burger {
     display: inline-block !important;
     cursor: pointer;
