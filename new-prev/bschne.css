@@ -71,10 +71,11 @@ a:active, a:hover {
 #header > h1 {
   padding-top: 0;
   display: inline-block;
+  float: left;
 }
 
 #burger {
-  float: right;
+  float: right !important;
   color: rgb(255, 77, 6);
   margin-top: 2px;
   display: none !important;
