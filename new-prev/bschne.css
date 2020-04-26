@@ -122,11 +122,28 @@ ul#nav > li > a:hover
   max-width: 680px;
 }
 
+#content > img {
+  max-width: 100%;
+  max-height: 75vh;
+  margin: 10em auto;
+  display: table-cell;
+  align-content: middle;
+}
+
 #content-grid {
   margin-right: 2em;
   margin-left: 25%;
   padding-top: .75em;
   max-width: 1200px;
+}
+
+#content-grid > .title-row {
+  /* max-width: 680px; */
+  margin-bottom: 3em;
+}
+
+#content-grid > .title-row > .separator {
+  color: rgb(255, 77, 6);
 }
 
 .grid-item {
