@@ -1,5 +1,7 @@
 * {
     font-size: 1.1rem;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
 }
 
 body {
@@ -7,7 +9,7 @@ body {
     padding: 0;
     margin: 0;
     border-top: 5px solid #E25303;
-    font-family: 'Lora', serif;
+    font-family: neue-haas-unica, sans-serif;
     font-size: 1rem;
 }
 
@@ -20,7 +22,7 @@ p, a, span, time {
 h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
     font-size: 1.5rem;
-    font-family: 'Roboto', sans-serif;
+    font-family: neue-haas-unica, sans-serif;
 }
 
 h1 { display: block; font-size: 2em; margin-top: 2em; margin-bottom: .75em; }
