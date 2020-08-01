@@ -52,6 +52,14 @@ a, a:link, a:visited, a:active, a:hover {
     text-decoration: none;
 }
 
+a:hover {
+    border-bottom: 1px solid rgb(255, 77, 6);
+}
+
+ul {
+    padding-left: 0;
+}
+
 .post-meta,
 .post-meta * {
     font-size: .9rem;
