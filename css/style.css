@@ -8,7 +8,7 @@ body {
     width: 100%;
     padding: 0;
     margin: 0;
-    border-top: 5px solid #E25303;
+    border-top: 5px solid rgb(255, 77, 6);
     font-family: neue-haas-unica, sans-serif;
     font-size: 1rem;
 }
@@ -48,9 +48,8 @@ code, code span {
 }
 
 a, a:link, a:visited, a:active, a:hover {
-    color: #E25303;
+    color: rgb(255, 77, 6);
     text-decoration: none;
-    /* border-bottom: 1px dashed #E25303; */
 }
 
 .post-meta,
