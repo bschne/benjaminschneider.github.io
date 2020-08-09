@@ -5,7 +5,7 @@ let template = (title, img, url) => {
     return `
     <div class="book">
         <a href="${url}" target="_blank" title='${title}'>
-            <img src="img/${img}" alt='${title}'/>
+            <img src="img/books/${img}" alt='${title}'/>
         </a>
     </div>
     `;
