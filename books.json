@@ -70,6 +70,11 @@
         "link": "https://www.goodreads.com/book/show/35036409-my-brilliant-friend"
     },
     {
+        "title": "Ferrante, Elena. - \"The Story of a New Name\"",
+        "image": "ferrante-2.jpg",
+        "link": "https://www.goodreads.com/book/show/17465515-the-story-of-a-new-name"
+    },
+    {
         "title": "Levi, Primo. - \"The Periodic Table\"",
         "image": "levi.jpg",
         "link": "https://www.goodreads.com/book/show/427282.The_Periodic_Table"
@@ -115,7 +120,7 @@
         "link": "https://www.goodreads.com/book/show/10009.Homo_Faber"
     },
     {
-        "title": "Calvino, Italo - \"Invisible Cities\" (I happened to be listening to this while reading it, and thought it went together perfectly)",
+        "title": "Calvino, Italo - \"Invisible Cities\"",
         "image": "calvino.jpg",
         "link": "https://www.goodreads.com/book/show/9809.Invisible_Cities"
     },
