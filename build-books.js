@@ -1,5 +1,8 @@
 'use strict';
 const fs = require('fs');
+const htmlTemplate = "./books_template.html"
+const outputFile = "./books.html"
+const placeholder = "{{BOOKS}}"
 
 let template = (title, img, url) => {
     return `
@@ -38,4 +41,11 @@ for (let index = 0; index < (3 - (books.length % 3)) && index < 3; index++) {
 
 out += `</div>`;
 
-console.log(out);
+fs.readFile(htmlTemplate, 'utf8', (err, data) => {
+    if (err) return console.log(err);
+
+    let result = data.replace(new RegExp(placeholder, "g"), out);
+    fs.writeFile(outputFile, result, 'utf8', (err) => {
+        if (err) return console.log(err);
+    });
+});
