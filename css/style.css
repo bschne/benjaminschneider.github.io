@@ -1,7 +1,12 @@
 * {
     font-size: 1.1rem;
+    
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
 }
 
 body {
@@ -68,4 +73,8 @@ ul {
 
 .post-title {
     margin-bottom: .5rem;
+}
+
+.image-caption {
+    color: #777;
 }

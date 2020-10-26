@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Benjamin Schneider</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i|Roboto|Roboto+Mono:400,400i,700,700i" rel="stylesheet">
+
+    <!-- SCRIPTS -->
+    <link rel="stylesheet"
+                href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/monokai-sublime.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css" integrity="sha384-dbVIfZGuN1Yq7/1Ocstc1lUEm+AT+/rCkibIcC/OmWo5f0EA48Vf8CytHzGrSwbQ" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js" integrity="sha384-2BKqo+exmr9su6dir+qCw08N2ZKRucY4PrGQPPWU1A7FtlCGjmEGFqXCv5nyM5Ij" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+       		renderMathInElement(
+      	    	document.body,
+          		{
+              	delimiters: [
+                  		{left: "$$", right: "$$", display: true},
+                  		{left: "\\[", right: "\\]", display: true},
+                  		{left: "$", right: "$", display: false},
+                  		{left: "\\(", right: "\\)", display: false}
+              		]
+          		}
+      		); 
+        });
+    </script>
+</head>
+
+<body>
+    <main>
+       <article class="post tag-programming">
+
+                    <header class="post-header post-header-single">
+                        <h1 class="post-title">Programming Elevators</h1>
+                        <section class="post-meta">
+                            <time class="post-date" datetime="2017-01-21">21 January 2017</time>  on <a href="/tag/programming/">Programming</a>
+                        </section>
+                    </header>
+
+                    <section class="post-content">
+                        <p><em>A quick guide to developing a simple solution to the programming game Elevator Saga</em></p>
+
+<p>A while back, a friend showed me the programming game <a href="http://play.elevatorsaga.com/">"Elevator Saga"</a>. It currently consists of 18 challenges with different configurations of floors and elevators. Each challenge poses certain criteria, for instance to transport X people within Y seconds, or to transport X people without letting any single person wait for their elevator longer than Y seconds. The goal is then using the game's javascript API to program the behavior of the elevators so that the given challenge's criteria are met.</p>
+
+<h4>Mathematics!</h4>
+
+<p>Thanks to KaTeX, we can also embed inline maths like the formula $\left\{\frac{1}{n^2}\right\}$ and have it beautifully rendered. Let's also try somethig like $$\frac{2}{\pi^2}$$</p>
+
+<p>Now the previous one was inline, but this is displayed \[\int_0^1\frac{x^4(1-x)^4}{1+x^2}\,dx =\frac{22}{7}-\pi\] centered on its own line.</p>
+
+<p>In this post, I'd like to show how to implement a relatively simple algorithm that passes the first 12 of the 18 challenges. The solution is mostly event-driven, having the elevators react to certain events that occur over the course of a challenge being run.</p>
+
+<h4 id="pressingfloorbuttonsinsideanelevator">Pressing Floor Buttons Inside An Elevator</h4>
+
+<p>First things first: Let's set up what happens when someone gets into one of our elevators and presses the button of the floor they want to go to. Let's start simple and add the requested floor to then end of the queue. This makes sure everyone will (eventually) get to their floor, but it might end up with the same floor being requested multiple times. </p>
+
+<p>Obviously the passengers would all get off the first time the elevator stops at their floor, but we might end up later going to the same floor again because it is still in the queue, even though there are no passengers left who want to go there. Preventing this problem is no big challenge - instead of just adding the pressed floor to the queue, we first check if it is already enqueued and only add it if it is not.</p>
+
+<pre><code class="JavaScript">elevator.on("floor_button_pressed", function(floorNum) {  
+    if (elevator.destinationQueue.indexOf(floorNum) == -1) {
+        elevator.goToFloor(floorNum); 
+    }
+});
+</code></pre>
+
+<h4 id="requestinganelevatorfromafloor">Requesting An Elevator From A Floor</h4>
+
+<p>Next up, people wating for an elevator on any floor have the option of pressing the usual "up" and "down" buttons, depending an what direction they want to go in. We could write code to react to every button press on a floor, but this would be unnecessary since all that interests us for a given floor is whether or not there is currently someone waiting to go up and/or down from that floor.</p>
+
+<p>To keep track of this, we add the respective boolean attributes for whether or not there is a request to go up or down to each floor object in the game. We can then tell the game to simply set these attributes to true for a floor whenever the corresponding button is pressed by someone.</p>
+
+<p>These attributes will later be used to service these floors whenever it makes sense to do so, but we'll get to that in a second.</p>
+
+<pre><code class="JavaScript">floors.forEach(function(floor, index) {  
+    floor.requestedUp = false;
+    floor.requestedDown = false;
+    floor.on("up_button_pressed", function() {
+        floor.requestedUp = true;
+    });
+    floor.on("down_button_pressed", function() {
+        floor.requestedDown = true;
+    });
+});
+</code></pre>
+
+<h4 id="nomorefloorstogoto">No More Floors To Go To</h4>
+
+<p>Currently, if there are no people in the elevator requesting a floor, it just waits wherever it is currently stopped until someone gets in and presses a floor button again. Let's change this.</p>
+
+<p>In the previous step, we started keeping track of what floors people were waiting on - so let's just pick the closest floor where there is a request to go down or up (or both), pick everyone up (we are ignoring whether they want to go down or up for now) and reset the request attributes for that floor until someone new comes along and waits for an elevator (otherwise we might end up with multiple elevators idling and going there).</p>
+
+<p>But what if there is no one waiting on any floor? We'll keep it simple for now and tell the elevator to return to the ground floor in that case.</p>
+
+<pre><code class="JavaScript">elevator.on(<span class="hljs-string">"idle"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{  
+    <span class="hljs-keyword">var</span> requestedFloors = floors.filter(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">f</span>) </span>{ 
+                                            <span class="hljs-keyword">return</span> f.requestedUp || 
+                                            f.requestedDown; 
+                                        });
+    <span class="hljs-keyword">var</span> distances = requestedFloors.map(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">f</span>) </span>{ 
+                                            <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.abs(f.floorNum() -
+                                            elevator.currentFloor()); 
+                                        });
+    <span class="hljs-keyword">var</span> floorIndex = <span class="hljs-built_in">Math</span>.min.apply(<span class="hljs-literal">null</span>, distances);
+    <span class="hljs-keyword">if</span> (requestedFloors[floorIndex]) {
+        <span class="hljs-keyword">var</span> floorNum = requestedFloors[floorIndex].floorNum();
+        floors[floorNum].requestedUp = <span class="hljs-literal">false</span>;
+        floors[floorNum].requestedDown = <span class="hljs-literal">false</span>;
+        elevator.goToFloor(floorNum);
+    } <span class="hljs-keyword">else</span> {
+        elevator.goToFloor(<span class="hljs-number">0</span>);
+    }
+});
+</code></pre>
+
+<h4 id="makingthequeuemoreefficient">Making The Queue More Efficient</h4>
+
+<p>Let's recap our current algorithm: We go to each floor requested by a passenger, and if there are no more floors, we go to the closest one where someone is waiting for an elevator to pick them up. This is fine, but it has one huge inefficiency. Let's say we are on the ground floor, and two people get in. The first one wants to go up five floors, and the second one wants to go up one floor. With our current implementation, we would go up five floors first, and then go down again to drop off the second passenger, resulting in a huge detour and an unnecessarily long trip for our second passenger. In addition, we might go up five floors from the ground floor with just one passenger on board, while there are other people that want to go up too and could have been picked up waiting along the other floors in between.</p>
+
+<p>Luckily, the game's API provides a simple event that is triggered right before the elevator passes a floor which lets us improve this without having to sort the queue of requested floors every time we add one or implement some sort of scheduling to send elevators to requested floors before they become idle and go there on their own.</p>
+
+<p>Let's implement three simple rules to decide whether the elevator should stop on a floor it passes while en route to its destination:</p>
+
+<ul>
+<li>If the elevator still has enough capacity and is currently going upwards, stop if there is someone waiting to go up from the floor.</li>
+<li>If the elevator still has enough capacity and is currently going downwards, stop if there is someone waiting to go down from the floor.</li>
+<li>If the floor has already been requested by a passenger currently on the elevator, stop there now and remove the floor from the queue so we don't end up going there again later.</li>
+</ul>
+
+<pre><code class="JavaScript">elevator.on(<span class="hljs-string">"passing_floor"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">floorNum, direction</span>) </span>{  
+    <span class="hljs-keyword">if</span> (elevator.loadFactor() &lt;= <span class="hljs-number">0.7</span>) {
+        <span class="hljs-keyword">if</span> (direction == <span class="hljs-string">"up"</span> &amp;&amp; floors[floorNum].requestedUp) {
+            elevator.goToFloor(floorNum, <span class="hljs-literal">true</span>); 
+        }
+        <span class="hljs-keyword">if</span> (direction == <span class="hljs-string">"down"</span> &amp;&amp; floors[floorNum].requestedDown) {
+            elevator.goToFloor(floorNum, <span class="hljs-literal">true</span>); 
+        }
+    }
+    <span class="hljs-keyword">if</span> (elevator.destinationQueue.indexOf(floorNum) != <span class="hljs-number">-1</span>) { 
+        elevator.destinationQueue.splice(elevator.destinationQueue.indexOf(floorNum), <span class="hljs-number">1</span>);
+        elevator.goToFloor(floorNum, <span class="hljs-literal">true</span>); 
+    }
+});
+</code></pre>
+
+<h4 id="onesmallthing">One Small Thing...</h4>
+
+<p>Finally, we need to set the request attributes for a floor to false whenever we stop there and pick people up. For this, we just set the request corresponding to the current travel direction of our elevator to false whenever we stop.</p>
+
+<pre><code class="JavaScript">elevator.on(<span class="hljs-string">"stopped_at_floor"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">floorNum</span>) </span>{  
+    <span class="hljs-keyword">if</span> (elevator.destinationDirection() == <span class="hljs-string">"up"</span>) {
+        floors[floorNum].requestedUp = <span class="hljs-literal">false</span>;
+    } <span class="hljs-keyword">else</span> {
+        floors[floorNum].requestedDown = <span class="hljs-literal">false</span>;
+    }
+});
+</code></pre>
+
+<h4 id="goingfurther">Going Further</h4>
+
+<p>The algorithm outlined above currently passes twelve of the eighteen challenges provided by the game. Right now, there are two additions I can think of which would bring further improvements to the efficiency.</p>
+
+<p>The first one concerns picking up people when stopping at a given floor - the game provides a way of setting the indicator lights to tell the passengers whether the elevator is going to go up or down, so we could make use of these to prevent picking up someone while going in the wrong direction.</p>
+
+<p>The second improvement concerns the behavior of the elevator when it is idle. We currently only check for requested floors once when going idle. Instead, we might implement some sort of load balancing / scheduling solution which assigns a floor request to a suitable elevator either by distance or current load whenever it occurs.</p>
+
+<hr>
+
+<p>The full source code of my current solution can be found at <a href="https://github.com/bschne/elevator-saga/">https://github.com/bschne/elevator-saga/</a></p>
+                    </section>
+
+                </article> 
+    </main>
+</body>
+
+</html>
