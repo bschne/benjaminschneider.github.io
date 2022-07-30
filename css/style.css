@@ -97,3 +97,13 @@ a:hover {
     margin-bottom: 1.5em;
     display: block;
 }
+
+.project-image {
+    float: left;
+    max-width: 240px;
+    margin-right: 1em;
+}
+
+.project-container {
+    margin-top: 1em;
+}
